@@ -1,17 +1,16 @@
 <template>
   <div class="gl_content">
     <div class="left_btn">
-      <div
-        v-for="(item, index) in glBtnList"
-        :key="index"
-        :class="{ btn: true, btn_active: item.active }"
-        @click.stop="chooseDrawItem(item, index)"
-      >
+      <div v-for="(item, index) in glBtnList"
+          :key="index"
+          :class="{ btn: true, btn_active: item.active }"
+          @click.stop="chooseDrawItem(item, index)">
         {{ item.label }}
       </div>
     </div>
     <!-- <div class="right_content"> -->
-      <canvas class="right_content" id="webgl"></canvas>
+    <canvas class="right_content"
+            id="webgl"></canvas>
     <!-- </div> -->
   </div>
 </template>
@@ -26,7 +25,7 @@ import Terrain from '@/utils/cube/terrain.js';
 let canvas = null;
 let gl = null;
 export default {
-  data() {
+  data () {
     return {
       glBtnList: [
         {
@@ -64,17 +63,18 @@ export default {
       curScale: 1.0,
     };
   },
-  mounted() {
+  mounted () {
     canvas = document.getElementById('webgl');
     gl = canvas.getContext('webgl');
-    gl.canvas.width = canvas.clientWidth
-    gl.canvas.height = canvas.clientHeight
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+
+    // 设置canvas宽高
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   },
   watch: {},
   methods: {
     // 选择按钮
-    chooseDrawItem(item, index) {
+    chooseDrawItem (item, index) {
       this.clearAll();
       if (item.active) {
         item.active = false;
@@ -100,13 +100,13 @@ export default {
         case 'Terrain':
           this.drawTerrain()
           break;
-      
+
         default:
           break;
       }
     },
 
-    initShaders(gl, vertexShaderSource, fragmentShaderSource) {
+    initShaders (gl, vertexShaderSource, fragmentShaderSource) {
       //创建顶点着色器对象
       let vertexShader = gl.createShader(gl.VERTEX_SHADER);
       //创建片元着色器对象
@@ -123,8 +123,8 @@ export default {
       //创建程序对象program
       let program = gl.createProgram();
       //附着顶点着色器和片元着色器到program
-      gl.attachShader(program,vertexShader);
-      gl.attachShader(program,fragmentShader);
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
       //链接program
       gl.linkProgram(program);
       //使用program
@@ -133,7 +133,7 @@ export default {
       return program
     },
 
-    clearAll() {
+    clearAll () {
       cancelAnimationFrame(this.animation)
       this.animation = null
       gl.clearColor(1.0, 1.0, 1.0, 1.0);
@@ -141,7 +141,7 @@ export default {
     },
 
     // 点
-    drawOrRemoveHelloPoint() {
+    drawOrRemoveHelloPoint () {
       let program = this.initShaders(gl, PointShader.vertexShaderSource, PointShader.fragmentShaderSource)
       if (!program) {
         this.$message.warning('初始化shaders失败');
@@ -170,7 +170,7 @@ export default {
     },
 
     // 绘制三角形
-    drawOrRemoveTriangle() {
+    drawOrRemoveTriangle () {
       let program = this.initShaders(gl, TriangleShader.vertexShaderSource, TriangleShader.fragmentShaderSource)
       if (!program) {
         this.$message.warning('初始化shaders失败');
@@ -211,7 +211,7 @@ export default {
     },
 
     // 绘制空间中多个三角形
-    drawOrRemoveTriangleMatrix() {
+    drawOrRemoveTriangleMatrix () {
       let program = this.initShaders(gl, TriangleMatrixShader.vertexShaderSource, TriangleMatrixShader.fragmentShaderSource)
       if (!program) {
         this.$message.warning('初始化shaders失败');
@@ -251,7 +251,7 @@ export default {
       gl.bufferData(gl.ARRAY_BUFFER, verticesAndColor, gl.STATIC_DRAW)
       gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 6 * FSIZE, 0)
       gl.enableVertexAttribArray(a_Position)
-      
+
       let a_Color = gl.getAttribLocation(program, 'a_Color')
       // let colorBuffer = gl.createBuffer()
       // gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
@@ -268,7 +268,7 @@ export default {
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
       gl.drawArrays(gl.TRIANGLES, 0, 9)
     },
-    setMVPMatrix(program) {
+    setMVPMatrix (program) {
       let u_MvpMatrix = gl.getUniformLocation(program, 'u_MvpMatrix')
 
       // 模型矩阵
@@ -291,7 +291,7 @@ export default {
     },
 
     // 矩形
-    drawCuboid() {
+    drawCuboid () {
       let program = this.initShaders(gl, TriangleMatrixShader.vertexShaderSource, TriangleMatrixShader.fragmentShaderSource)
       if (!program) {
         this.$message.warning('初始化shaders失败');
@@ -316,7 +316,7 @@ export default {
 
       draw()
     },
-    initEventHandler() {
+    initEventHandler () {
       let dragging = false
       let lastX = -1
       let lastY = -1
@@ -363,7 +363,7 @@ export default {
       }
     },
     // 初始化矩形顶点和片元
-    initVertex(program, cuboid) {
+    initVertex (program, cuboid) {
       let vertexAndColor = new Float32Array([
         cuboid.maxX, cuboid.maxY, cuboid.maxZ, 1.0, 1.0, 1.0,  // v0 White
         cuboid.minX, cuboid.maxY, cuboid.maxZ, 1.0, 0.0, 1.0,  // v1 Magenta
@@ -404,7 +404,7 @@ export default {
 
       return indices.length
     },
-    setMVPMatrixMutiple(program, cuboid) {
+    setMVPMatrixMutiple (program, cuboid) {
       let u_MvpMatrix = gl.getUniformLocation(program, 'u_MvpMatrix')
 
       // 模型矩阵
@@ -434,7 +434,7 @@ export default {
     },
 
     // 绘制地形
-    drawTerrain() {
+    drawTerrain () {
       let program = this.initShaders(gl, TriangleMatrixShader.vertexShaderSource, TriangleMatrixShader.fragmentShaderSource)
       if (!program) {
         this.$message.warning('初始化shaders失败');
@@ -453,7 +453,7 @@ export default {
         this.onDraw(program, terrain)
       })
     },
-    onDraw(program, terrain) {
+    onDraw (program, terrain) {
       let n = this.initTerrainVertex(program, terrain)
 
       this.initEventHandler()
@@ -471,14 +471,14 @@ export default {
 
       tick()
     },
-    initTerrainVertex(program, terrain) {
+    initTerrainVertex (program, terrain) {
       let col = terrain.col
       let row = terrain.row
       let indices = new Uint16Array((row - 1) * (col - 1) * 6)
 
       let rc = 0
       for (let r = 0; r < row - 1; r++) {
-        for (let c = 0; c < col -1; c++) {
+        for (let c = 0; c < col - 1; c++) {
           indices[rc * 6] = r * col + c
           indices[rc * 6 + 1] = (r + 1) * col + c
           indices[rc * 6 + 2] = r * col + c + 1
@@ -510,7 +510,7 @@ export default {
 
       return indices.length
     },
-    readDEMFile(result, terrain) {
+    readDEMFile (result, terrain) {
       let stringlines = result.split("\n");
       if (!stringlines || stringlines.length <= 0) {
         return false;
@@ -591,7 +591,7 @@ export default {
   padding: 10px;
 
   .left_btn {
-    flex: 1;
+    width: 100px;
     height: 100%;
     // border: 1px solid;
     margin-right: 15px;
@@ -619,9 +619,8 @@ export default {
   }
 
   .right_content {
-    // flex: 1;
-    width: 1200px;
-    height: 100%;
+    flex: 1;
+    // height: 100%;
     border: 1px solid;
   }
 }

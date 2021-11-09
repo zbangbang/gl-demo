@@ -1,31 +1,33 @@
 <template>
-<div>
-  <div class="menu">
-    <div
-      class="menu_item"
-      v-for="(item, index) in menuList"
-      :key="index"
-      :class="{ bg: item.active }"
-      @click.stop="changeMenu(item)"
-    >{{item.label}}</div>
+  <div>
+    <div class="menu">
+      <div class="menu_item"
+           v-for="(item, index) in menuList"
+           :key="index"
+           :class="{ bg: item.active }"
+           @click.stop="changeMenu(item)">{{item.label}}</div>
+    </div>
+    <!-- gl组件 -->
+    <gl v-if="glShow"></gl>
+    <three v-if="threeShow"></three>
+    <!-- <gl-new v-if="glNewShow"></gl-new> -->
+    <glNew v-if="glNewShow"></glNew>
   </div>
-  <!-- gl组件 -->
-  <gl  v-if="glShow"></gl>
-  <three  v-if="threeShow"></three>
-</div>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex';
 import gl from '@/components/gl/index.vue';
 import three from '@/components/three/index.vue';
+import glNew from '@/components/glNew/index.vue';
 export default {
   name: "Home",
   components: {
     gl,
-    three
+    three,
+    glNew
   },
-  data() {
+  data () {
     return {
       menuList: [
         {
@@ -39,8 +41,8 @@ export default {
           active: false,
         },
         {
-          label: "t2",
-          value: "t2",
+          label: "gl-new",
+          value: "gl-new",
           active: false,
         },
       ],
@@ -50,15 +52,24 @@ export default {
     ...mapState({
       glShow: state => state.menu.glShow,
       threeShow: state => state.menu.threeShow,
+      glNewShow: state => state.menu.glNewShow,
     }),
   },
   methods: {
     ...mapMutations({
+      setAllFalse: 'setAllFalse',
       setGlShow: 'setGlShow',
       setThreeShow: 'setThreeShow',
+      setGlNewShow: 'setGlNewShow',
     }),
-    changeMenu(item) {
-      item.active = !item.active
+    changeMenu (item) {
+      this.setAllFalse()
+      if (item.active) {
+        item.active = false
+      } else {
+        this.menuList.forEach(menuItem => menuItem.active = false)
+        item.active = true
+      }
 
       switch (item.value) {
         case 'gl':
@@ -67,7 +78,10 @@ export default {
         case 'three':
           this.setThreeShow(item.active)
           break;
-      
+        case 'gl-new':
+          this.setGlNewShow(item.active)
+          break;
+
         default:
           break;
       }

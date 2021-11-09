@@ -16,6 +16,9 @@
 </template>
 
 <script>
+let scene, camera, renderer, controls, container, animationID;
+let glbModel,engineShip;
+let clock, tuniform, water, sun, modelMesh;
 // Threejs
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -24,11 +27,6 @@ import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
 import { Water } from "three/examples/jsm/objects/Water.js";
 import { Sky } from "three/examples/jsm/objects/Sky.js";
-let scene, camera, renderer, controls, container, animationID;
-let glbModel,engineShip;
-let clock, tuniform, water, sun, modelMesh;
-// 模型组
-let modelGroup = new THREE.Group();
 export default {
   data() {
     return {
@@ -56,7 +54,6 @@ export default {
     this.$nextTick(() => {
       if(scene) return;
       this.init();
-      scene.add(modelGroup);
       this.animate();
     });
   },
@@ -79,21 +76,21 @@ export default {
       switch (item.value) {
         case 'hm_model':
           if (modelMesh) {
-            modelGroup.remove(modelMesh)
+            scene.remove(modelMesh)
             modelMesh = null
           };
           this.loadHmModel()
           break;
         case 'jt_model':
           if (modelMesh) {
-            modelGroup.remove(modelMesh)
+            scene.remove(modelMesh)
             modelMesh = null
           };
           this.loadJtModel()
           break;
         case 'dd_model':
           if (modelMesh) {
-            modelGroup.remove(modelMesh)
+            scene.remove(modelMesh)
           };
           this.loadDdModel()
           break;
@@ -128,12 +125,12 @@ export default {
       scene = new THREE.Scene();
 
       camera = new THREE.PerspectiveCamera(
-        45,
+        55,
         container.clientWidth / container.clientHeight,
         1,
         20000
       );
-      camera.position.set(300, 150, 500);
+      camera.position.set(30, 30, 100);
 
       //
 
@@ -183,9 +180,9 @@ export default {
       // 控制
       controls = new OrbitControls(camera, renderer.domElement);
       controls.maxPolarAngle = Math.PI * 0.495;
-      controls.target.set(0, 0, 0);
-      controls.minDistance = 100.0;
-      controls.maxDistance = 5000.0;
+      controls.target.set(0, 10, 0);
+      controls.minDistance = 400.0;
+      controls.maxDistance = 2000.0;
       controls.update();
 
       // 灯光
@@ -269,7 +266,7 @@ export default {
         modelMesh.castShadow = true;
         modelMesh.receiveShadow = true;
 
-        modelGroup.add( modelMesh );
+        scene.add( modelMesh );
       })
     },
 
@@ -278,35 +275,22 @@ export default {
       let stlLoader = new STLLoader();
       stlLoader.load('stl/POLA_QuZhuJian.stl', geometry => {
         const material = new THREE.MeshPhongMaterial({ color: 0xcccccc, specular: 0x111111 });
-        modelMesh = new THREE.Mesh( geometry, material );
+        modelMesh = new THREE.modelMesh( geometry, material );
 
-        modelMesh.position.set( 0, 90, 0 );
+        modelMesh.position.set( 0, 35, 0 );
         modelMesh.rotation.set( -Math.PI / 2, 0, 0 );
-        modelMesh.scale.set( 0.01, 0.01, 0.01 );
+        modelMesh.scale.set( 5, 5, 5 );
 
         modelMesh.castShadow = true;
         modelMesh.receiveShadow = true;
 
-        modelGroup.add( modelMesh );
+        scene.add( modelMesh );
       })
     },
 
     // 加载dd模型
     loadDdModel() {
-      let stlLoader = new STLLoader();
-      stlLoader.load('stl/ZhanFu_xhdd.stl', geometry => {
-        const material = new THREE.MeshPhongMaterial({ color: 0xcccccc, specular: 0x111111 });
-        modelMesh = new THREE.Mesh( geometry, material );
-
-        modelMesh.position.set( 0, 90, 0 );
-        modelMesh.rotation.set( 0, 0, 0 );
-        modelMesh.scale.set( 0.01, 0.01, 0.01 );
-
-        modelMesh.castShadow = true;
-        modelMesh.receiveShadow = true;
-
-        modelGroup.add( modelMesh );
-      })
+      console.log('加载dd模型');
     },
   }
 };
