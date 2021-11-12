@@ -2,6 +2,7 @@ const state = {
   glShow: false,
   threeShow: false,
   glNewShow: false,
+  glTexShow: false,
 }
 
 const mutations = {
@@ -9,6 +10,7 @@ const mutations = {
     state.glShow = false
     state.threeShow = false
     state.glNewShow = false
+    state.glTexShow = false
   },
   // webgl页面显隐
   setGlShow(state, val) {
@@ -21,6 +23,10 @@ const mutations = {
   // glNew页面显隐
   setGlNewShow(state, val) {
     state.glNewShow = val
+  },
+  // glTex页面显隐
+  setGlTexShow(state, val) {
+    state.glTexShow = val
   },
 }
 

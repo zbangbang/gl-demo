@@ -12,6 +12,7 @@
     <three v-if="threeShow"></three>
     <!-- <gl-new v-if="glNewShow"></gl-new> -->
     <glNew v-if="glNewShow"></glNew>
+    <glTex v-if="glTexShow"></glTex>
   </div>
 </template>
 
@@ -20,12 +21,14 @@ import { mapState, mapMutations } from 'vuex';
 import gl from '@/components/gl/index.vue';
 import three from '@/components/three/index.vue';
 import glNew from '@/components/glNew/index.vue';
+import glTex from '@/components/glTex/index.vue';
 export default {
   name: "Home",
   components: {
     gl,
     three,
-    glNew
+    glNew,
+    glTex,
   },
   data () {
     return {
@@ -45,6 +48,11 @@ export default {
           value: "gl-new",
           active: false,
         },
+        {
+          label: "gl-tex",
+          value: "gl-tex",
+          active: false,
+        },
       ],
     };
   },
@@ -53,6 +61,7 @@ export default {
       glShow: state => state.menu.glShow,
       threeShow: state => state.menu.threeShow,
       glNewShow: state => state.menu.glNewShow,
+      glTexShow: state => state.menu.glTexShow,
     }),
   },
   methods: {
@@ -61,6 +70,7 @@ export default {
       setGlShow: 'setGlShow',
       setThreeShow: 'setThreeShow',
       setGlNewShow: 'setGlNewShow',
+      setGlTexShow: 'setGlTexShow',
     }),
     changeMenu (item) {
       this.setAllFalse()
@@ -80,6 +90,9 @@ export default {
           break;
         case 'gl-new':
           this.setGlNewShow(item.active)
+          break;
+        case 'gl-tex':
+          this.setGlTexShow(item.active)
           break;
 
         default:
