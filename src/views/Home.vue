@@ -13,6 +13,7 @@
     <!-- <gl-new v-if="glNewShow"></gl-new> -->
     <glNew v-if="glNewShow"></glNew>
     <glTex v-if="glTexShow"></glTex>
+    <Plane v-if="planeShow"></Plane>
   </div>
 </template>
 
@@ -22,6 +23,7 @@ import gl from '@/components/gl/index.vue';
 import three from '@/components/three/index.vue';
 import glNew from '@/components/glNew/index.vue';
 import glTex from '@/components/glTex/index.vue';
+import Plane from '@/components/plane/index.vue';
 export default {
   name: "Home",
   components: {
@@ -29,6 +31,7 @@ export default {
     three,
     glNew,
     glTex,
+    Plane,
   },
   data () {
     return {
@@ -53,6 +56,11 @@ export default {
           value: "gl-tex",
           active: false,
         },
+        {
+          label: "plane",
+          value: "plane",
+          active: false,
+        },
       ],
     };
   },
@@ -62,6 +70,7 @@ export default {
       threeShow: state => state.menu.threeShow,
       glNewShow: state => state.menu.glNewShow,
       glTexShow: state => state.menu.glTexShow,
+      planeShow: state => state.menu.planeShow,
     }),
   },
   methods: {
@@ -71,6 +80,7 @@ export default {
       setThreeShow: 'setThreeShow',
       setGlNewShow: 'setGlNewShow',
       setGlTexShow: 'setGlTexShow',
+      setPlaneShow: 'setPlaneShow',
     }),
     changeMenu (item) {
       this.setAllFalse()
@@ -93,6 +103,9 @@ export default {
           break;
         case 'gl-tex':
           this.setGlTexShow(item.active)
+          break;
+        case 'plane':
+          this.setPlaneShow(item.active)
           break;
 
         default:

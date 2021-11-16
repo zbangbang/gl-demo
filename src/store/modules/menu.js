@@ -3,6 +3,7 @@ const state = {
   threeShow: false,
   glNewShow: false,
   glTexShow: false,
+  planeShow: false,
 }
 
 const mutations = {
@@ -27,6 +28,10 @@ const mutations = {
   // glTex页面显隐
   setGlTexShow(state, val) {
     state.glTexShow = val
+  },
+  // plane页面显隐
+  setPlaneShow(state, val) {
+    state.planeShow = val
   },
 }
 
