@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 // Threejs
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -98,13 +99,12 @@ export default {
         45,
         container.clientWidth / container.clientHeight,
         1,
-        20000
+        5000
       );
-      camera.position.set(300, 150, 500);
+      camera.position.set(50, 100, 100);
 
-      var light = new THREE.PointLight( 0xff0000 );
-      light.position.set( 1000, 1000, 1000 );
-      scene.add(light)
+      const ambientLight = new THREE.AmbientLight(0xffffff)
+      scene.add(ambientLight)
 
       this.createPlane()
 
@@ -116,56 +116,13 @@ export default {
       controls.maxDistance = 5000.0;
       controls.update();
 
-      // 灯光
-      this.initLights();
-    },
-    // ================== 灯光 =============================
-    initLights() {
-      scene.add(new THREE.AmbientLight(0x0c0c0c));
-      //添加材质灯光阴影
-      var spotLight1 = new THREE.SpotLight(0xffffff);
-      spotLight1.position.set(-50, 100, 0);
-      scene.add(spotLight1);
-
-      var spotLight2 = new THREE.SpotLight(0xffffff);
-      spotLight2.position.set(550, 500, 0);
-      scene.add(spotLight2);
-
-      var spotLight3 = new THREE.SpotLight(0xffffff);
-      spotLight3.position.set(150, 50, -200);
-      scene.add(spotLight3);
-
-      var spotLight4 = new THREE.SpotLight(0xffffff);
-      spotLight4.position.set(150, 50, 200);
-      scene.add(spotLight4);
-
-      var spotLight5 = new THREE.SpotLight(0xffffff);
-      spotLight5.position.set(-500, 10, 0);
-      scene.add(spotLight5);
     },
 
     createPlane() {
-      // var geometry = new THREE.PlaneGeometry( 300, 300 );
-      // var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-      // var plane = new THREE.Mesh( geometry, material );
-      // scene.add( plane );
-
-      let smokeTexture = new THREE.TextureLoader().load( "/textures/640.jpg" );
-
-      const smokeMaterial = new THREE.MeshLambertMaterial({
-        color: new THREE.Color(0x00dddd),
-        map: smokeTexture,
-        transparent: true,
-      })
-      
-      const smokeGeo = new THREE.PlaneGeometry(100, 100)
-      for (let p = 0; p < 10; p++) {
-        const particle = new THREE.Mesh(smokeGeo, smokeMaterial)
-        particle.position.set(Math.random() * 500 - 250, Math.random() * 500 - 250, Math.random() * 1000 - 100)
-        particle.rotation.z = Math.random() * 360
-        scene.add(particle)
-        // smokeParticles.push(particle)
-      }
+      var geometry = new THREE.PlaneGeometry( 100, 100, 50, 50 );
+      var material = new THREE.MeshBasicMaterial( {color: 0xffff00, wireframe: true} );
+      var plane = new THREE.Mesh( geometry, material );
+      scene.add(plane);
     },
 
     onWindowResize() {
